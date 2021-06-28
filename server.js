@@ -42,9 +42,15 @@ app.get("/api/notes", async function (req, res) {
 app.post("/api/notes", async function (req, res) {
   const notes = req.body;
   try {
-    const data = await fs.writeFile("db/db.json", "utf8");
-    res.json(JSON.parse(data));
+    // Read from file
+    let data = await fs.readFile("db/db.json", "utf8");
+    // Parse data from file
+    data = JSON.parse(data);
+    // Add to our notes array
     data.push(notes);
+    // Write to file with new JSON string
+    
+    // Respond to client/front end
   } catch (err) {
     res.status(500).send("Server failed");
   }
