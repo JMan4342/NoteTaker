@@ -49,8 +49,9 @@ app.post("/api/notes", async function (req, res) {
     // Add to our notes array
     data.push(notes);
     // Write to file with new JSON string
-    
+    await fs.writeFile("db/db.json", JSON.stringify(data));
     // Respond to client/front end
+    res.json(data);
   } catch (err) {
     res.status(500).send("Server failed");
   }
