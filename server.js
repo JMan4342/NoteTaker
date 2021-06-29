@@ -1,13 +1,12 @@
-const path =require("path");
 const fs = require("fs/promises");
+
+const { nanoid } = require('nanoid');
+const id = nanoid();
 
 const express = require("express");
 const app = express();
 
 const PORT = 8080;
-
-const noteList = [];
-const dbFilePath = path.join(__dirname, "db/db.json");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -57,22 +56,28 @@ app.post("/api/notes", async function (req, res) {
   }
 });
 
-// GET - /api/notes
-// app.get("/api/notes", function (req, res) {
-//   fs.readFile("./db/db.json", "utf8").then((content) => {
-//     const data = JSON.parse(content);
-//     res.json(data);
-//   });
-//   });
+// View saved tasks
+app.post(`/api/notes/${id}`, async function (req, res) {
+  try {
+    // Read from file
+    let data = await fs.readFile("db/db.json", "utf8");
+    // Parse data from file
+    data = JSON.parse(data);
+    // Add to our notes array
+    data.push(notes);
+    // Write to file with new JSON string
+    await fs.writeFile("db/db.json", JSON.stringify(data));
+    // Respond to client/front end
+    res.json(data);
+  } catch (err) {
+    res.status(500).send("Server failed");
+  }
+})
 
-// POST - /api/notes
-// app.post("/api/notes", async function (req, res) {
-//   const notes = req.body;
-//   const content = await fs.writeFile("/db/db.json", "utf8");
-//   const data = JSON.parse(content);
-//   res.json(data)
-//   data.push(title);
-// });
+// Delete saved tasks
+// app.delete(`/api/notes/${id}`, async function (req, res) {
+
+// })
 
 app.listen(PORT, () =>
   console.log(`App listening at http://localhost:${PORT}`)
