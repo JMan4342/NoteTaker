@@ -21,7 +21,7 @@
   
 
   ## Usage
-  The user is deployed through Heroku.
+  The app is deployed through Heroku, and can be found at https://note-taker0630.herokuapp.com/.
 
 
   ## Contributing
@@ -44,6 +44,7 @@
 * http://expressjs.com
 * https://npmjs.com
 * https://www.javascripttutorial.net
+  
   
   
   ## Questions
