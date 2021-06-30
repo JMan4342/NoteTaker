@@ -31,7 +31,7 @@
   
 
   ## Testing
-  Below you will find screenshots and a video showing the application in action.
+  Below you will find screenshots and a link to a video showing the application in action.
   
 
   ## License
