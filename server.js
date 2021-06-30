@@ -1,6 +1,6 @@
 const fs = require("fs/promises");
 
-const { nanoid } = require('nanoid');
+const { nanoid } = require("nanoid");
 const id = nanoid();
 
 const express = require("express");
@@ -13,7 +13,6 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static("public"));
 
-
 // HTML routes
 // Index/home site
 app.get("/", function (req, res) {
@@ -25,7 +24,6 @@ app.get("/notes", function (req, res) {
   res.sendFile(__dirname + "/public/notes.html");
 });
 
-
 // // GET request to /api/notes
 app.get("/api/notes", async function (req, res) {
   try {
@@ -33,13 +31,14 @@ app.get("/api/notes", async function (req, res) {
     res.json(JSON.parse(data));
   } catch (err) {
     res.status(500).send("Server failed");
-    console.log(err)
+    console.log(err);
   }
 });
 
 // // POST request to /api/notes
 app.post("/api/notes", async function (req, res) {
   const notes = req.body;
+  notes.id = nanoid();
   try {
     // Read from file
     let data = await fs.readFile("db/db.json", "utf8");
@@ -57,14 +56,39 @@ app.post("/api/notes", async function (req, res) {
 });
 
 // View saved tasks
-app.post(`/api/notes/${id}`, async function (req, res) {
+// app.post(`/api/notes/${id}`, async function (req, res) {
+//   try {
+//     // Read from file
+//     let data = await fs.readFile("db/db.json", "utf8");
+//     // Parse data from file
+//     data = JSON.parse(data);
+//     // Add to our notes array
+//     data.push(notes);
+//     // Write to file with new JSON string
+//     await fs.writeFile("db/db.json", JSON.stringify(data));
+//     // Respond to client/front end
+//     res.json(data);
+//   } catch (err) {
+//     res.status(500).send("Server failed");
+//   }
+// });
+
+// Delete saved tasks
+app.delete(`/api/notes/:id`, async function (req, res) {
+  const id = req.params.id;
+  console.log("Hello", id);
+  // const notes = req.body;
+  // const id = req.params.id;
   try {
     // Read from file
     let data = await fs.readFile("db/db.json", "utf8");
     // Parse data from file
     data = JSON.parse(data);
-    // Add to our notes array
-    data.push(notes);
+    // Filter notes array
+    data = data.filter(function () {
+      return data.id !== id;
+    }
+    );
     // Write to file with new JSON string
     await fs.writeFile("db/db.json", JSON.stringify(data));
     // Respond to client/front end
@@ -72,12 +96,7 @@ app.post(`/api/notes/${id}`, async function (req, res) {
   } catch (err) {
     res.status(500).send("Server failed");
   }
-})
-
-// Delete saved tasks
-// app.delete(`/api/notes/${id}`, async function (req, res) {
-
-// })
+});
 
 app.listen(PORT, () =>
   console.log(`App listening at http://localhost:${PORT}`)
