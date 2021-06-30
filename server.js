@@ -76,7 +76,6 @@ app.post("/api/notes", async function (req, res) {
 // Delete saved tasks
 app.delete(`/api/notes/:id`, async function (req, res) {
   const id = req.params.id;
-  console.log("Hello", id);
   // const notes = req.body;
   // const id = req.params.id;
   try {
@@ -85,14 +84,14 @@ app.delete(`/api/notes/:id`, async function (req, res) {
     // Parse data from file
     data = JSON.parse(data);
     // Filter notes array
-    data = data.filter(function () {
+    let updateDB = data.filter(function (data) {
       return data.id !== id;
     }
     );
     // Write to file with new JSON string
-    await fs.writeFile("db/db.json", JSON.stringify(data));
+    await fs.writeFile("db/db.json", JSON.stringify(updateDB));
     // Respond to client/front end
-    res.json(data);
+    res.json(updateDB);
   } catch (err) {
     res.status(500).send("Server failed");
   }
