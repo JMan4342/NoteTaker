@@ -55,29 +55,10 @@ app.post("/api/notes", async function (req, res) {
   }
 });
 
-// View saved tasks
-// app.post(`/api/notes/${id}`, async function (req, res) {
-//   try {
-//     // Read from file
-//     let data = await fs.readFile("db/db.json", "utf8");
-//     // Parse data from file
-//     data = JSON.parse(data);
-//     // Add to our notes array
-//     data.push(notes);
-//     // Write to file with new JSON string
-//     await fs.writeFile("db/db.json", JSON.stringify(data));
-//     // Respond to client/front end
-//     res.json(data);
-//   } catch (err) {
-//     res.status(500).send("Server failed");
-//   }
-// });
-
 // Delete saved tasks
 app.delete(`/api/notes/:id`, async function (req, res) {
   const id = req.params.id;
-  // const notes = req.body;
-  // const id = req.params.id;
+
   try {
     // Read from file
     let data = await fs.readFile("db/db.json", "utf8");
@@ -86,8 +67,7 @@ app.delete(`/api/notes/:id`, async function (req, res) {
     // Filter notes array
     let updateDB = data.filter(function (data) {
       return data.id !== id;
-    }
-    );
+    });
     // Write to file with new JSON string
     await fs.writeFile("db/db.json", JSON.stringify(updateDB));
     // Respond to client/front end
